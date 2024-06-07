@@ -29,12 +29,17 @@ public class Main {
     ClientFactory factory;
     @Inject
     org.example.clientnoclose.ClientFactory factoryNoClose;
-
     @RestClient
     ApiClient apiClient;
 
     @Override
     public int run(String... args) throws Exception {
+      //launch(args);
+      Quarkus.waitForExit();
+      return 0;
+    }
+
+    public void launch(final String... args) throws Exception {
       final var config = ConfigProvider.getConfig();
       LOGGER.infof("Using HTTP Server at: %s", config.getValue("quarkus.rest-client.apiclient.url", String.class));
       var action = ARGS.APIGET;
@@ -50,10 +55,9 @@ public class Main {
       } else {
         lauchTests(action);
       }
-      return 0;
     }
 
-    private void lauchTests(final ARGS action) throws Exception {
+    public void lauchTests(final ARGS action) throws Exception {
       final var STEP = 100;
       final var bytes = new byte[120000];
       final var random = new Random();

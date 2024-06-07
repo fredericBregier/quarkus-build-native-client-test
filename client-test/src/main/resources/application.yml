@@ -16,6 +16,7 @@ quarkus:
     limits:
       max-chunk-size: 65536
       max-body-size: 10M
+    port: 8083
   vertx:
     prefer-native-transport: true
   rest-client:
