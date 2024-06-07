@@ -30,6 +30,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.model.UploadResponse;
+import org.jboss.logging.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,11 +38,13 @@ import java.io.InputStream;
 @ApplicationScoped
 @Path("/root")
 public class ApiService {
+    private static final Logger LOGGER = Logger.getLogger(ApiService.class);
     @GET
     @Path("get/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Uni<Response> get(@PathParam("name") final String name) {
         return Uni.createFrom().emitter(em -> {
+            LOGGER.infof("GET");
             try {
                 final var uploadResponse = new UploadResponse(name, -1);
                 em.complete(Response.status(201).entity(uploadResponse).build());
@@ -59,6 +62,7 @@ public class ApiService {
     public Uni<Response> inputStream(@PathParam("name") final String name, @Context final Closer closer,
                                      final InputStream inputStream) {
         return Uni.createFrom().emitter(em -> {
+            LOGGER.infof("POST");
             try {
                 closer.add(inputStream);
                 final long size = inputStream.readAllBytes().length;

@@ -24,7 +24,7 @@ quarkus:
       body-limit: 1024
     max-chunk-size: 65536
     apiclient:
-      url: http://localhost:8080
+      url: http://localhost:8082
   rest:
     input-buffer-size: 65536
     output-buffer-size: 65536

@@ -56,20 +56,31 @@ public class Main {
                     config.getValue("quarkus.rest-client.apiclient.url", String.class));
             var action = ARGS.APIGET;
             if (args.length > 0) {
-                try {
-                    action = ARGS.valueOf(args[0]);
-                } catch (final IllegalArgumentException e) {
-                    LOGGER.warnf("Unrecognized command: %s", args[0]);
+                for (var arg : args) {
+                    try {
+                        action = ARGS.valueOf(arg);
+                    } catch (final IllegalArgumentException e) {
+                        LOGGER.warnf("Unrecognized command: %s", arg);
+                    }
+                    lauchTests(action);
                 }
+            } else {
+                lauchTests(action);
             }
+            return 0;
+        }
+
+        private void lauchTests(final ARGS action) throws Exception {
+            final var STEP = 100;
             final var bytes = new byte[120000];
             final var random = new Random();
             random.nextBytes(bytes);
             final var name = "test";
+            Thread.sleep(1000);
             switch (action) {
                 case APIGET -> {
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             LOGGER.infof("Result GET Native Client: %s", apiClient.get(name));
                         }
                     } catch (final Exception e) {
@@ -78,7 +89,7 @@ public class Main {
                 }
                 case APIPOST -> {
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             LOGGER.infof("Result POST Native Client: %s", apiClient.fromBytes(name, bytes));
                         }
                     } catch (final Exception e) {
@@ -87,7 +98,7 @@ public class Main {
                 }
                 case APISTREAM -> {
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             LOGGER.infof("Result INPUTSTREAM Native Client: %s",
                                     apiClient.inputStream(name, new ByteArrayInputStream(bytes)));
                         }
@@ -98,7 +109,7 @@ public class Main {
                 case GET -> {
                     try (final var client = factory.getInstance()) {
                         try {
-                            for (var i = 0; i < 10; i++) {
+                            for (var i = 0; i < STEP; i++) {
                                 LOGGER.infof("Result GET Client: %s", client.get(name));
                             }
                         } catch (final Exception e) {
@@ -106,7 +117,7 @@ public class Main {
                         }
                     }
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             try (final var client = factory.getInstance()) {
                                 LOGGER.infof("Result GET CLOSED Client: %s", client.get(name));
                             }
@@ -118,7 +129,7 @@ public class Main {
                 case POST -> {
                     try (final var client = factory.getInstance()) {
                         try {
-                            for (var i = 0; i < 10; i++) {
+                            for (var i = 0; i < STEP; i++) {
                                 LOGGER.infof("Result POST Client: %s", client.fromBytes(name, bytes));
                             }
                         } catch (final Exception e) {
@@ -126,7 +137,7 @@ public class Main {
                         }
                     }
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             try (final var client = factory.getInstance()) {
                                 LOGGER.infof("Result POST CLOSED Client: %s", client.fromBytes(name, bytes));
                             }
@@ -138,7 +149,7 @@ public class Main {
                 case STREAM -> {
                     try (final var client = factory.getInstance()) {
                         try {
-                            for (var i = 0; i < 10; i++) {
+                            for (var i = 0; i < STEP; i++) {
                                 LOGGER.infof("Result INPUTSTREAM Client: %s",
                                         client.inputStream(name, new ByteArrayInputStream(bytes)));
                             }
@@ -147,7 +158,7 @@ public class Main {
                         }
                     }
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             try (final var client = factory.getInstance()) {
                                 LOGGER.infof("Result INPUTSTREAM CLOSED Client: %s",
                                         client.inputStream(name, new ByteArrayInputStream(bytes)));
@@ -160,7 +171,7 @@ public class Main {
                 case NOCLOSEGET -> {
                     try (final var client = factoryNoClose.getInstance()) {
                         try {
-                            for (var i = 0; i < 10; i++) {
+                            for (var i = 0; i < STEP; i++) {
                                 LOGGER.infof("Result GET Client: %s", client.get(name));
                             }
                         } catch (final Exception e) {
@@ -168,7 +179,7 @@ public class Main {
                         }
                     }
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             try (final var client = factoryNoClose.getInstance()) {
                                 LOGGER.infof("Result GET CLOSED Client: %s", client.get(name));
                             }
@@ -180,7 +191,7 @@ public class Main {
                 case NOCLOSEPOST -> {
                     try (final var client = factoryNoClose.getInstance()) {
                         try {
-                            for (var i = 0; i < 10; i++) {
+                            for (var i = 0; i < STEP; i++) {
                                 LOGGER.infof("Result POST Client: %s", client.fromBytes(name, bytes));
                             }
                         } catch (final Exception e) {
@@ -188,7 +199,7 @@ public class Main {
                         }
                     }
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             try (final var client = factoryNoClose.getInstance()) {
                                 LOGGER.infof("Result POST CLOSED Client: %s", client.fromBytes(name, bytes));
                             }
@@ -200,7 +211,7 @@ public class Main {
                 case NOCLOSESTREAM -> {
                     try (final var client = factoryNoClose.getInstance()) {
                         try {
-                            for (var i = 0; i < 10; i++) {
+                            for (var i = 0; i < STEP; i++) {
                                 LOGGER.infof("Result INPUTSTREAM Client: %s",
                                         client.inputStream(name, new ByteArrayInputStream(bytes)));
                             }
@@ -209,7 +220,7 @@ public class Main {
                         }
                     }
                     try {
-                        for (var i = 0; i < 10; i++) {
+                        for (var i = 0; i < STEP; i++) {
                             try (final var client = factoryNoClose.getInstance()) {
                                 LOGGER.infof("Result INPUTSTREAM CLOSED Client: %s",
                                         client.inputStream(name, new ByteArrayInputStream(bytes)));
@@ -220,8 +231,6 @@ public class Main {
                     }
                 }
             }
-            Quarkus.waitForExit();
-            return 0;
         }
     }
 }

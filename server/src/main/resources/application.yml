@@ -16,6 +16,7 @@ quarkus:
     limits:
       max-chunk-size: 65536
       max-body-size: 10M
+    port: 8082
   vertx:
     prefer-native-transport: true
   rest-client:
@@ -24,7 +25,7 @@ quarkus:
       body-limit: 1024
     max-chunk-size: 65536
     apiclient:
-      url: http://localhost:8080
+      url: http://localhost:8082
   rest:
     input-buffer-size: 65536
     output-buffer-size: 65536

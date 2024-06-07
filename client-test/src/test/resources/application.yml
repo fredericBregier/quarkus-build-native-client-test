@@ -1,4 +1,7 @@
 quarkus:
   rest-client:
     apiclient:
-      url: http://localhost:8081
+      url: http://localhost:8082
+
+  http:
+    test-port: 8082
