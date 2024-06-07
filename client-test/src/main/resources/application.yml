@@ -1,0 +1,30 @@
+quarkus:
+  log:
+    console:
+      level: INFO
+    level: INFO
+    category:
+      "org.jboss.resteasy.reactive.client.logging":
+        level: DEBUG
+  http:
+    so-reuse-port: true
+    tcp-quick-ack: true
+    tcp-fast-open: true
+    cors:
+      ~: true
+      origins: /.*/
+    limits:
+      max-chunk-size: 65536
+      max-body-size: 10M
+  vertx:
+    prefer-native-transport: true
+  rest-client:
+    logging:
+      scope: request-response
+      body-limit: 1024
+    max-chunk-size: 65536
+    apiclient:
+      url: http://localhost:8080
+  rest:
+    input-buffer-size: 65536
+    output-buffer-size: 65536

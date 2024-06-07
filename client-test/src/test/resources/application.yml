@@ -1,0 +1,4 @@
+quarkus:
+  rest-client:
+    apiclient:
+      url: http://localhost:8081
